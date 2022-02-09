@@ -10,6 +10,9 @@ public class AlarmManagement : MonoBehaviour
     private bool _isOpened;
     private float _deltaVolume;
     private float _volume;
+    private float _maxVolume;
+    private float _minVolume;
+    private WaitForFixedUpdate _waitForFixedUpdate;
 
     private void Awake()
     {
@@ -17,6 +20,9 @@ public class AlarmManagement : MonoBehaviour
         _audioSource.clip = _audioClip;
         _isOpened = false;
         _deltaVolume = 0.01f;
+        _maxVolume = 1f;
+        _minVolume = 0f;
+        _waitForFixedUpdate = new WaitForFixedUpdate();
     }
 
     private void Start()
@@ -30,35 +36,39 @@ public class AlarmManagement : MonoBehaviour
         if (collision.TryGetComponent<Player>(out Player player))
         {
             _isOpened = !_isOpened;
-        }
 
-        StartCoroutine(ChangeVolume());
+            if (_isOpened)
+            {
+                StopCoroutine(DecreaseVolume());
+                StartCoroutine(RaiseVolume());
+            }
+            else
+            {
+                StopCoroutine(RaiseVolume());
+                StartCoroutine(DecreaseVolume());
+            }
+        }
     }
 
-    private IEnumerator ChangeVolume()
+    private IEnumerator DecreaseVolume()
     {
-        var waitForFixedUpdate = new WaitForFixedUpdate();
-        int iterations = 100;
-
-        if (_isOpened)
+        while (_audioSource.volume != _minVolume)
         {
-            for (int i = 0; i < iterations; i++)
-            {
-                _volume = Mathf.MoveTowards(_audioSource.volume, _audioSource.maxDistance, _deltaVolume);
-                _audioSource.volume = _volume;
+            _volume = Mathf.MoveTowards(_audioSource.volume, _minVolume, _deltaVolume);
+            _audioSource.volume = _volume;
 
-                yield return waitForFixedUpdate;
-            }
+            yield return _waitForFixedUpdate;
         }
-        else
-        {
-            for (int i = 0; i < iterations; i++)
-            {
-                _volume = Mathf.MoveTowards(_audioSource.volume, _audioSource.minDistance, -_deltaVolume);
-                _audioSource.volume = _volume;
+    }
 
-                yield return waitForFixedUpdate;
-            }
+    private IEnumerator RaiseVolume()
+    {
+        while (_audioSource.volume != _maxVolume)
+        {
+            _volume = Mathf.MoveTowards(_audioSource.volume, _maxVolume, _deltaVolume);
+            _audioSource.volume = _volume;
+
+            yield return _waitForFixedUpdate;
         }
     }
 }
