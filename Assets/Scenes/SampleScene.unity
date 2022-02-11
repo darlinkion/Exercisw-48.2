@@ -2388,8 +2388,8 @@ GameObject:
   - component: {fileID: 1314862163}
   - component: {fileID: 1314862162}
   - component: {fileID: 1314862166}
-  - component: {fileID: 1314862168}
   - component: {fileID: 1314862167}
+  - component: {fileID: 1314862168}
   m_Layer: 0
   m_Name: block
   m_TagString: Untagged

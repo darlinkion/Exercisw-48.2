@@ -1,7 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Events;
 
 [RequireComponent(typeof(AudioSource))]
 
@@ -10,12 +7,11 @@ public class Door : MonoBehaviour
     [SerializeField] private Animator _animator;
 
     private bool _isOpened;
-    private string _animationTrigger;
+    private const string _animationTrigger = "Person";
 
     private void Awake()
     {
         _isOpened = false;
-        _animationTrigger = "Person";
     }
 
     private void OnTriggerEnter(Collider collision)
