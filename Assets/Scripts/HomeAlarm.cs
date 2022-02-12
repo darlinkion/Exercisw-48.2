@@ -1,23 +1,25 @@
 using System.Collections;
-using System.Collections.Generic;
-using System.Threading;
 using UnityEngine;
+
+[RequireComponent(typeof(AudioSource))]
+[RequireComponent(typeof(Door))]
 
 public class HomeAlarm : MonoBehaviour
 {
     [SerializeField] private AudioClip _audioClip;
+
     private AudioSource _audioSource;
-    private bool _isEnabled;
     private float _deltaVolume;
     private float _maxVolume;
     private float _minVolume;
     private WaitForFixedUpdate _waitForFixedUpdate;
+    private Door _door;
 
     private void Awake()
     {
         _audioSource = GetComponent<AudioSource>();
+        _door = GetComponent<Door>();
         _audioSource.clip = _audioClip;
-        _isEnabled = false;
         _deltaVolume = 0.01f;
         _maxVolume = 1f;
         _minVolume = 0f;
@@ -32,20 +34,15 @@ public class HomeAlarm : MonoBehaviour
 
     private void OnTriggerEnter(Collider collision)
     {
-        if (collision.TryGetComponent<Player>(out Player player))
+        if (_door.DoorIsOpen)
         {
-            _isEnabled = !_isEnabled;
-
-            if (_isEnabled)
-            {
-                StopCoroutine(DecreaseVolume());
-                StartCoroutine(RaiseVolume());
-            }
-            else
-            {
-                StopCoroutine(RaiseVolume());
-                StartCoroutine(DecreaseVolume());
-            }
+            StopCoroutine(DecreaseVolume());
+            StartCoroutine(RaiseVolume());
+        }
+        else
+        {
+            StopCoroutine(RaiseVolume());
+            StartCoroutine(DecreaseVolume());
         }
     }
 

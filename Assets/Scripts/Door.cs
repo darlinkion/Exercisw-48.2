@@ -1,13 +1,13 @@
 using UnityEngine;
 
-[RequireComponent(typeof(AudioSource))]
-
 public class Door : MonoBehaviour
 {
     [SerializeField] private Animator _animator;
 
-    private bool _isOpened;
     private const string AnimationTrigger = "Person";
+    private bool _isOpened;
+
+    public bool DoorIsOpen => _isOpened;
 
     private void Awake()
     {
