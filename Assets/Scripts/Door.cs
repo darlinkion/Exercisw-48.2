@@ -7,7 +7,7 @@ public class Door : MonoBehaviour
     [SerializeField] private Animator _animator;
 
     private bool _isOpened;
-    private const string _animationTrigger = "Person";
+    private const string AnimationTrigger = "Person";
 
     private void Awake()
     {
@@ -25,6 +25,6 @@ public class Door : MonoBehaviour
 
     private void Open()
     {
-        _animator.SetTrigger(_animationTrigger);
+        _animator.SetTrigger(AnimationTrigger);
     }
 }
